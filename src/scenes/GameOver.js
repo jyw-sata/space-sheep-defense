@@ -37,7 +37,7 @@ export class GameOverScene extends Phaser.Scene {
     this.add.text(w / 2, h * 0.65, '재도전', {
       fontFamily: 'monospace',
       fontSize: '24px',
-      fill: '#00ffcc',
+      fill: '#ffffff',
       fontStyle: 'bold',
     }).setOrigin(0.5);
 
@@ -48,7 +48,7 @@ export class GameOverScene extends Phaser.Scene {
     this.add.text(w / 2, h * 0.75, '메뉴', {
       fontFamily: 'monospace',
       fontSize: '24px',
-      fill: '#00ffcc',
+      fill: '#ffffff',
       fontStyle: 'bold',
     }).setOrigin(0.5);
 

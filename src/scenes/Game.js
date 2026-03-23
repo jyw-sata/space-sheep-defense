@@ -42,11 +42,19 @@ export class GameScene extends Phaser.Scene {
   }
 
   createStarfield() {
-    for (let i = 0; i < 50; i++) {
-      const x = Phaser.Math.Between(0, 720);
-      const y = Phaser.Math.Between(0, 1280);
-      const star = this.add.circle(x, y, Phaser.Math.FloatBetween(0.3, 1.2), 0xffffff, 0.4);
-      star.setDepth(-1);
+    // Sky gradient at top
+    this.add.rectangle(360, 30, 720, 60, 0x5599dd, 0.3).setDepth(-1);
+    // Decorative clouds (subtle)
+    for (let i = 0; i < 5; i++) {
+      const cx = Phaser.Math.Between(50, 670);
+      const cy = Phaser.Math.Between(85, 1050);
+      const cloud = this.add.ellipse(cx, cy, Phaser.Math.Between(40, 80), 15, 0xffffff, 0.06).setDepth(-1);
+      this.tweens.add({
+        targets: cloud,
+        x: cloud.x + Phaser.Math.Between(-20, 20),
+        duration: Phaser.Math.Between(5000, 10000),
+        yoyo: true, repeat: -1, ease: 'Sine.easeInOut',
+      });
     }
   }
 
@@ -196,8 +204,9 @@ export class GameScene extends Phaser.Scene {
   createUI() {
     const w = 720;
 
-    // Top bar background
-    this.add.rectangle(w / 2, 40, w, 80, 0x0a0a2e, 0.9).setDepth(100);
+    // Top bar background (wooden/earthy)
+    this.add.rectangle(w / 2, 40, w, 80, 0x3a2a1a, 0.92).setDepth(100);
+    this.add.rectangle(w / 2, 79, w, 2, 0x8B6914, 0.5).setDepth(100);
 
     // Coins
     this.add.image(30, 25, 'coin').setDepth(100).setScale(1.5);
@@ -224,8 +233,8 @@ export class GameScene extends Phaser.Scene {
     this.speedBtn.on('pointerdown', () => this.toggleSpeed());
 
     // Start/Next wave button - big and visible
-    this.startBtnBg = this.add.rectangle(w / 2, 55, 160, 36, 0x005522, 0.95)
-      .setStrokeStyle(2, 0x00ff88, 1).setInteractive().setDepth(100);
+    this.startBtnBg = this.add.rectangle(w / 2, 55, 160, 36, 0x228833, 0.95)
+      .setStrokeStyle(2, 0x88ff88, 1).setInteractive().setDepth(100);
     this.startBtn = this.add.text(w / 2, 55, '▶ 시작', {
       fontFamily: 'monospace', fontSize: '18px', fill: '#00ff88', fontStyle: 'bold',
     }).setOrigin(0.5).setDepth(101);
@@ -243,7 +252,8 @@ export class GameScene extends Phaser.Scene {
 
     // Bottom tower selection panel
     const panelY = 1170;
-    this.add.rectangle(w / 2, panelY + 55, w, 220, 0x0a0a2e, 0.95).setDepth(100);
+    this.add.rectangle(w / 2, panelY + 55, w, 220, 0x3a2a1a, 0.95).setDepth(100);
+    this.add.rectangle(w / 2, panelY - 14, w, 2, 0x8B6914, 0.5).setDepth(100);
 
     // Selected tower info text (above buttons)
     this.infoText = this.add.text(w / 2, panelY - 5, '타워를 선택하세요', {
@@ -490,7 +500,7 @@ export class GameScene extends Phaser.Scene {
     this.actionPanel.setVisible(true);
 
     // Background - bigger panel
-    const bg = this.add.rectangle(0, 0, 260, 90, 0x0a0a2e, 0.95)
+    const bg = this.add.rectangle(0, 0, 260, 90, 0x3a2a1a, 0.95)
       .setStrokeStyle(2, tower.config.color, 0.8);
     this.actionPanel.add(bg);
 
@@ -1170,7 +1180,7 @@ export class GameScene extends Phaser.Scene {
     const h = 640; // center of play area
 
     // Background flash
-    const overlay = this.add.rectangle(w / 2, h, w, 120, isBoss ? 0xff0022 : 0x0a0a2e, 0.85).setDepth(300);
+    const overlay = this.add.rectangle(w / 2, h, w, 120, isBoss ? 0xff0022 : 0x3a2a1a, 0.85).setDepth(300);
 
     // Wave text
     const mainText = this.add.text(w / 2, h - 15, isBoss ? '⚠ 최종 보스 웨이브! ⚠' : `웨이브 ${waveNum}`, {

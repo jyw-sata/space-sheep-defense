@@ -37,31 +37,36 @@ export class BootScene extends Phaser.Scene {
     const g = this.make.graphics({ add: false });
     const S = 40; // cell size
 
-    // --- Grid ---
+    // --- Grid (green grass theme) ---
     g.clear();
-    g.fillStyle(0x141435, 1);
+    // Base grass color with variation
+    g.fillStyle(0x3a8a3a, 1);
     g.fillRect(0, 0, S, S);
-    g.lineStyle(1, 0x252555, 0.6);
+    // Lighter grass patches
+    g.fillStyle(0x44994a, 0.5);
+    g.fillCircle(10, 12, 6);
+    g.fillCircle(28, 30, 7);
+    g.fillCircle(35, 8, 5);
+    // Darker grass patches
+    g.fillStyle(0x2d7a2d, 0.4);
+    g.fillCircle(22, 22, 5);
+    g.fillCircle(5, 35, 6);
+    // Subtle grid line
+    g.lineStyle(1, 0x2a6a2a, 0.4);
     g.strokeRect(0, 0, S, S);
-    // subtle inner glow dots at corners
-    g.fillStyle(0x303068, 0.4);
-    g.fillCircle(0, 0, 2);
-    g.fillCircle(S, 0, 2);
-    g.fillCircle(0, S, 2);
-    g.fillCircle(S, S, 2);
     g.generateTexture('cell', S, S);
 
     g.clear();
-    g.fillStyle(0x00ff88, 0.2);
+    g.fillStyle(0x44cc44, 0.3);
     g.fillRect(0, 0, S, S);
-    g.lineStyle(2, 0x00ff88, 0.7);
+    g.lineStyle(2, 0x44ff44, 0.8);
     g.strokeRect(1, 1, S - 2, S - 2);
     g.generateTexture('cell_valid', S, S);
 
     g.clear();
-    g.fillStyle(0xff0044, 0.2);
+    g.fillStyle(0xff4444, 0.3);
     g.fillRect(0, 0, S, S);
-    g.lineStyle(2, 0xff0044, 0.7);
+    g.lineStyle(2, 0xff4444, 0.8);
     g.strokeRect(1, 1, S - 2, S - 2);
     g.generateTexture('cell_invalid', S, S);
 
@@ -110,17 +115,25 @@ export class BootScene extends Phaser.Scene {
     g.fillRect(26, 42, 6, 3);
     g.generateTexture('sheep', sh, sh);
 
-    // Sheep pen
+    // Sheep pen - lighter grass with flowers
     g.clear();
-    g.fillStyle(0x00cc66, 0.08);
+    g.fillStyle(0x55bb55, 1);
     g.fillRect(0, 0, S, S);
-    g.lineStyle(1, 0x00cc66, 0.3);
-    g.strokeRect(2, 2, S - 4, S - 4);
-    // Grass tufts
-    g.fillStyle(0x00aa44, 0.3);
-    g.fillCircle(10, 35, 4);
-    g.fillCircle(30, 32, 3);
-    g.fillCircle(20, 38, 3);
+    g.fillStyle(0x66cc66, 0.6);
+    g.fillCircle(12, 14, 7);
+    g.fillCircle(28, 28, 8);
+    g.fillCircle(8, 32, 5);
+    // Little flowers
+    g.fillStyle(0xffff66, 0.7);
+    g.fillCircle(8, 10, 2);
+    g.fillCircle(30, 15, 2);
+    g.fillCircle(20, 35, 2);
+    g.fillStyle(0xff88aa, 0.6);
+    g.fillCircle(15, 30, 2);
+    g.fillCircle(35, 8, 1.5);
+    // Fence-like border
+    g.lineStyle(2, 0x8B6914, 0.6);
+    g.strokeRect(1, 1, S - 2, S - 2);
     g.generateTexture('sheep_pen', S, S);
 
     // Spawn point
@@ -597,20 +610,25 @@ export class BootScene extends Phaser.Scene {
     g.strokeCircle(100, 100, 100);
     g.generateTexture('range_circle', 200, 200);
 
-    // UI Button
+    // UI Button (wooden style)
     g.clear();
-    g.fillStyle(0x1a1a3e, 0.9);
+    g.fillStyle(0x5a3a1a, 0.95);
     g.fillRoundedRect(0, 0, 120, 50, 8);
-    g.lineStyle(2, 0x00ffcc, 1);
+    g.lineStyle(2, 0x8B6914, 1);
     g.strokeRoundedRect(0, 0, 120, 50, 8);
     g.generateTexture('button', 120, 50);
 
-    // Tower slot button
+    // Tower slot button (wooden)
     g.clear();
-    g.fillStyle(0x1a1a3e, 0.9);
+    g.fillStyle(0x4a3018, 0.95);
     g.fillRoundedRect(0, 0, 80, 80, 8);
-    g.lineStyle(2, 0x4444aa, 1);
+    g.lineStyle(2, 0x7a5520, 1);
     g.strokeRoundedRect(0, 0, 80, 80, 8);
+    // Wood grain hint
+    g.lineStyle(1, 0x5a4020, 0.3);
+    g.lineBetween(10, 20, 70, 20);
+    g.lineBetween(10, 40, 70, 40);
+    g.lineBetween(10, 60, 70, 60);
     g.generateTexture('tower_slot', 80, 80);
 
     // Coin icon

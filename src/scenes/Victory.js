@@ -15,7 +15,7 @@ export class VictoryScene extends Phaser.Scene {
     this.add.text(w / 2, h * 0.25, '승리!', {
       fontFamily: 'monospace',
       fontSize: '48px',
-      fill: '#00ffcc',
+      fill: '#ffffff',
       fontStyle: 'bold',
     }).setOrigin(0.5);
 
@@ -45,7 +45,7 @@ export class VictoryScene extends Phaser.Scene {
     this.add.text(w / 2, h * 0.67, '다시 하기', {
       fontFamily: 'monospace',
       fontSize: '22px',
-      fill: '#00ffcc',
+      fill: '#ffffff',
       fontStyle: 'bold',
     }).setOrigin(0.5);
     retryBtn.on('pointerdown', () => this.scene.start('Game'));
@@ -55,7 +55,7 @@ export class VictoryScene extends Phaser.Scene {
     this.add.text(w / 2, h * 0.77, '메뉴', {
       fontFamily: 'monospace',
       fontSize: '22px',
-      fill: '#00ffcc',
+      fill: '#ffffff',
       fontStyle: 'bold',
     }).setOrigin(0.5);
     menuBtn.on('pointerdown', () => this.scene.start('MainMenu'));

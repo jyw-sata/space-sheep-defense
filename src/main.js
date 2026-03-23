@@ -14,7 +14,7 @@ const config = {
     width: 720,
     height: 1280,
   },
-  backgroundColor: '#0a0a2e',
+  backgroundColor: '#2d6a2d',
   scene: [BootScene, MainMenuScene, GameScene, GameOverScene, VictoryScene],
   physics: {
     default: 'arcade',
