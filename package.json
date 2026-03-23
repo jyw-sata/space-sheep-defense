@@ -1,0 +1,18 @@
+{
+  "name": "space-sheep-defense",
+  "version": "1.0.0",
+  "description": "SF Tower Defense - Protect your sheep from aliens!",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "phaser": "^3.80.0",
+    "easystarjs": "^0.4.4"
+  },
+  "devDependencies": {
+    "vite": "^6.0.0"
+  }
+}
