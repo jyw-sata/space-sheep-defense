@@ -13,7 +13,7 @@ export class GameScene extends Phaser.Scene {
     this.waveManager = new WaveManager(this);
 
     // Game state
-    this.coins = 200;
+    this.coins = 400;
     this.sheepCount = 10;
     this.selectedTower = null; // tower type key to place
     this.towers = [];
@@ -153,44 +153,63 @@ export class GameScene extends Phaser.Scene {
     this.startBtn.on('pointerdown', () => this.onStartWave());
 
     // Bottom tower selection panel
-    const panelY = 1200;
-    this.add.rectangle(w / 2, panelY + 40, w, 160, 0x0a0a2e, 0.95).setDepth(100);
+    const panelY = 1170;
+    this.add.rectangle(w / 2, panelY + 55, w, 220, 0x0a0a2e, 0.95).setDepth(100);
+
+    // Selected tower info text (above buttons)
+    this.infoText = this.add.text(w / 2, panelY - 5, 'Select a tower to place', {
+      fontFamily: 'monospace', fontSize: '13px', fill: '#8888aa',
+    }).setOrigin(0.5).setDepth(101);
 
     const towerKeys = Object.keys(TOWER_TYPES);
-    const startX = 72;
-    const spacing = 120;
+    const towerEmojis = { plasma: '🔵', laser: '🔴', slow: '❄️', missile: '💥', flak: '🟣' };
+    const towerDesc = {
+      plasma: 'All-round\nGround+Air',
+      laser: 'High DMG\nGround+Air',
+      slow: 'Slow down\nGround only',
+      missile: 'Splash AoE\nGround only',
+      flak: 'Anti-Air\nAir only',
+    };
+    const spacing = 136;
+    const startX = 80;
+    const rowY = panelY + 35;
 
     this.towerButtons = [];
     towerKeys.forEach((key, i) => {
       const tower = TOWER_TYPES[key];
-      const x = startX + (i % 6) * spacing;
-      const y = panelY + (i < 6 ? 10 : 70);
+      const x = startX + i * spacing;
+      const y = rowY;
 
-      // Slot background
-      const slot = this.add.image(x, y, 'tower_slot').setInteractive().setDepth(100);
+      // Slot background (bigger)
+      const slot = this.add.image(x, y, 'tower_slot').setScale(1.3, 1.6).setInteractive().setDepth(100);
 
-      // Tower icon
-      const icon = this.add.image(x, y - 8, tower.key).setScale(0.9).setDepth(101);
-
-      // Cost text
-      const costText = this.add.text(x, y + 22, `$${tower.cost}`, {
-        fontFamily: 'monospace', fontSize: '11px', fill: '#ffdd00',
+      // Emoji label
+      this.add.text(x, y - 35, towerEmojis[key], {
+        fontSize: '18px',
       }).setOrigin(0.5).setDepth(101);
 
-      // Name
-      this.add.text(x, y + 35, tower.name, {
-        fontFamily: 'monospace', fontSize: '9px', fill: '#8888aa',
+      // Tower icon
+      const icon = this.add.image(x, y - 14, tower.key).setScale(0.85).setDepth(101);
+
+      // Name (bigger)
+      this.add.text(x, y + 10, tower.name, {
+        fontFamily: 'monospace', fontSize: '12px', fill: '#ffffff', fontStyle: 'bold',
+      }).setOrigin(0.5).setDepth(101);
+
+      // Short description
+      this.add.text(x, y + 32, towerDesc[key], {
+        fontFamily: 'monospace', fontSize: '9px', fill: '#8888cc', align: 'center', lineSpacing: 2,
+      }).setOrigin(0.5).setDepth(101);
+
+      // Cost text (bigger, clearer)
+      const costText = this.add.text(x, y + 55, `💰${tower.cost}`, {
+        fontFamily: 'monospace', fontSize: '13px', fill: '#ffdd00', fontStyle: 'bold',
       }).setOrigin(0.5).setDepth(101);
 
       slot.on('pointerdown', () => this.selectTower(key));
 
       this.towerButtons.push({ slot, icon, costText, key });
     });
-
-    // Selected tower info text
-    this.infoText = this.add.text(w / 2, panelY - 20, '', {
-      fontFamily: 'monospace', fontSize: '12px', fill: '#8888aa',
-    }).setOrigin(0.5).setDepth(100);
 
     // Tower action panel (upgrade/sell) - hidden initially
     this.actionPanel = this.add.container(0, 0).setDepth(200).setVisible(false);
