@@ -28,16 +28,23 @@ export class MainMenuScene extends Phaser.Scene {
     // Title
     this.add.text(w / 2, h * 0.25, '🛸', { fontSize: '80px' }).setOrigin(0.5);
 
-    this.add.text(w / 2, h * 0.35, 'SPACE SHEEP\nDEFENSE', {
+    this.add.text(w / 2, h * 0.35, '우주양\n방어전', {
       fontFamily: 'monospace',
-      fontSize: '42px',
+      fontSize: '48px',
       fill: '#00ffcc',
       align: 'center',
       fontStyle: 'bold',
       lineSpacing: 8,
     }).setOrigin(0.5);
 
-    this.add.text(w / 2, h * 0.45, 'Protect your flock from alien invaders!', {
+    this.add.text(w / 2, h * 0.46, 'Space Sheep Defense', {
+      fontFamily: 'monospace',
+      fontSize: '16px',
+      fill: '#6688aa',
+      align: 'center',
+    }).setOrigin(0.5);
+
+    this.add.text(w / 2, h * 0.50, '외계인으로부터 양을 지켜라!', {
       fontFamily: 'monospace',
       fontSize: '14px',
       fill: '#8888aa',
@@ -61,7 +68,7 @@ export class MainMenuScene extends Phaser.Scene {
 
     // Play button
     const playBtn = this.add.image(w / 2, h * 0.7, 'button').setScale(2, 1.5).setInteractive();
-    this.add.text(w / 2, h * 0.7, 'PLAY', {
+    this.add.text(w / 2, h * 0.7, '시작', {
       fontFamily: 'monospace',
       fontSize: '28px',
       fill: '#00ffcc',
@@ -77,10 +84,10 @@ export class MainMenuScene extends Phaser.Scene {
 
     // How to play
     const helpTexts = [
-      'Tap grid to place towers',
-      'Create a maze to slow aliens',
-      'Protect all 10 sheep!',
-      'Flying aliens ignore your maze',
+      '격자를 탭해서 타워를 배치하세요',
+      '미로를 만들어 외계인을 늦추세요',
+      '양 10마리를 모두 지키세요!',
+      '비행 외계인은 미로를 무시합니다',
     ];
 
     helpTexts.forEach((text, i) => {

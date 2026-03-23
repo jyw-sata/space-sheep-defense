@@ -12,14 +12,14 @@ export class VictoryScene extends Phaser.Scene {
 
     this.add.rectangle(w / 2, h / 2, w, h, 0x000000, 0.7);
 
-    this.add.text(w / 2, h * 0.25, 'VICTORY!', {
+    this.add.text(w / 2, h * 0.25, '승리!', {
       fontFamily: 'monospace',
       fontSize: '48px',
       fill: '#00ffcc',
       fontStyle: 'bold',
     }).setOrigin(0.5);
 
-    this.add.text(w / 2, h * 0.35, 'The aliens have been defeated!', {
+    this.add.text(w / 2, h * 0.35, '외계인을 물리쳤습니다!', {
       fontFamily: 'monospace',
       fontSize: '16px',
       fill: '#88ffcc',
@@ -34,7 +34,7 @@ export class VictoryScene extends Phaser.Scene {
       fill: '#ffdd00',
     }).setOrigin(0.5);
 
-    this.add.text(w / 2, h * 0.53, `${sheepLeft}/10 sheep saved`, {
+    this.add.text(w / 2, h * 0.53, `${sheepLeft}/10 마리 생존`, {
       fontFamily: 'monospace',
       fontSize: '22px',
       fill: '#ffffff',
@@ -42,7 +42,7 @@ export class VictoryScene extends Phaser.Scene {
 
     // Replay
     const retryBtn = this.add.image(w / 2, h * 0.67, 'button').setScale(2, 1.5).setInteractive();
-    this.add.text(w / 2, h * 0.67, 'PLAY AGAIN', {
+    this.add.text(w / 2, h * 0.67, '다시 하기', {
       fontFamily: 'monospace',
       fontSize: '22px',
       fill: '#00ffcc',
@@ -52,7 +52,7 @@ export class VictoryScene extends Phaser.Scene {
 
     // Menu
     const menuBtn = this.add.image(w / 2, h * 0.77, 'button').setScale(2, 1.5).setInteractive();
-    this.add.text(w / 2, h * 0.77, 'MENU', {
+    this.add.text(w / 2, h * 0.77, '메뉴', {
       fontFamily: 'monospace',
       fontSize: '22px',
       fill: '#00ffcc',

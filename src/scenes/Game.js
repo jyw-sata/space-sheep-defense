@@ -134,7 +134,7 @@ export class GameScene extends Phaser.Scene {
     }).setDepth(100);
 
     // Wave info
-    this.waveText = this.add.text(w / 2, 20, 'TAP START!', {
+    this.waveText = this.add.text(w / 2, 20, '시작을 누르세요!', {
       fontFamily: 'monospace', fontSize: '18px', fill: '#00ffcc', fontStyle: 'bold',
     }).setOrigin(0.5).setDepth(100);
 
@@ -157,18 +157,19 @@ export class GameScene extends Phaser.Scene {
     this.add.rectangle(w / 2, panelY + 55, w, 220, 0x0a0a2e, 0.95).setDepth(100);
 
     // Selected tower info text (above buttons)
-    this.infoText = this.add.text(w / 2, panelY - 5, 'Select a tower to place', {
+    this.infoText = this.add.text(w / 2, panelY - 5, '타워를 선택하세요', {
       fontFamily: 'monospace', fontSize: '13px', fill: '#8888aa',
     }).setOrigin(0.5).setDepth(101);
 
     const towerKeys = Object.keys(TOWER_TYPES);
-    const towerEmojis = { plasma: '🔵', laser: '🔴', slow: '❄️', missile: '💥', flak: '🟣' };
+    const towerNames = { plasma: '플라즈마', laser: '레이저', slow: '냉동', missile: '미사일', flak: '대공포' };
+    const towerEmojis = { plasma: '🔫', laser: '🔴', slow: '❄️', missile: '🚀', flak: '💜' };
     const towerDesc = {
-      plasma: 'All-round\nGround+Air',
-      laser: 'High DMG\nGround+Air',
-      slow: 'Slow down\nGround only',
-      missile: 'Splash AoE\nGround only',
-      flak: 'Anti-Air\nAir only',
+      plasma: '만능형\n지상+공중',
+      laser: '고데미지\n지상+공중',
+      slow: '감속\n지상전용',
+      missile: '범위폭발\n지상전용',
+      flak: '대공전문\n공중전용',
     };
     const spacing = 136;
     const startX = 80;
@@ -191,8 +192,8 @@ export class GameScene extends Phaser.Scene {
       // Tower icon
       const icon = this.add.image(x, y - 14, tower.key).setScale(0.85).setDepth(101);
 
-      // Name (bigger)
-      this.add.text(x, y + 10, tower.name, {
+      // Name (Korean, bigger)
+      this.add.text(x, y + 10, towerNames[key], {
         fontFamily: 'monospace', fontSize: '12px', fill: '#ffffff', fontStyle: 'bold',
       }).setOrigin(0.5).setDepth(101);
 
@@ -250,13 +251,15 @@ export class GameScene extends Phaser.Scene {
 
     const tower = TOWER_TYPES[key];
     if (this.coins < tower.cost) {
-      this.showFloatingText(360, 1160, 'Not enough coins!', '#ff0044');
+      this.showFloatingText(360, 1160, '코인 부족!', '#ff0044');
       return;
     }
 
     this.selectedTower = key;
     this.hideActionPanel();
-    this.infoText.setText(`${tower.name}: ${tower.description}`);
+    const kNames = { plasma: '플라즈마', laser: '레이저', slow: '냉동', missile: '미사일', flak: '대공포' };
+    const kDesc = { plasma: '만능형 - 지상+공중 공격', laser: '고데미지 저격 - 지상+공중', slow: '적 감속 - 지상전용', missile: '범위 폭발 - 지상전용', flak: '대공 전문 - 공중전용' };
+    this.infoText.setText(`${kNames[key]}: ${kDesc[key]}`);
     this.highlightTowerButton(key);
   }
 
@@ -303,13 +306,13 @@ export class GameScene extends Phaser.Scene {
   async tryPlaceTower(col, row) {
     const towerType = TOWER_TYPES[this.selectedTower];
     if (this.coins < towerType.cost) {
-      this.showFloatingText(360, 1160, 'Not enough coins!', '#ff0044');
+      this.showFloatingText(360, 1160, '코인 부족!', '#ff0044');
       return;
     }
 
     const canPlace = await this.pathManager.canPlace(col, row);
     if (!canPlace) {
-      this.showFloatingText(360, 600, 'Cannot place here!', '#ff0044');
+      this.showFloatingText(360, 600, '설치 불가!', '#ff0044');
       return;
     }
 
@@ -475,7 +478,7 @@ export class GameScene extends Phaser.Scene {
     this.waveManager.autoStart = true;
     const hasMore = this.waveManager.startNextWave();
     if (hasMore) {
-      this.startBtn.setText('NEXT');
+      this.startBtn.setText('다음');
       this.updateUI();
     }
   }
@@ -713,14 +716,33 @@ export class GameScene extends Phaser.Scene {
 
   fireBullet(tower, towerPos, target) {
     const bullet = this.add.image(towerPos.x, towerPos.y, tower.config.bulletKey)
-      .setDepth(25);
+      .setDepth(25).setScale(1.2);
+
+    // Tower-specific bullet speeds and effects
+    const bulletSpeeds = { plasma: 280, laser: 500, slow: 200, missile: 220, flak: 400 };
+    const speed = bulletSpeeds[tower.type] || 300;
+
+    // Muzzle flash for tower
+    const flash = this.add.circle(towerPos.x, towerPos.y, 8, tower.config.color, 0.6).setDepth(26);
+    this.tweens.add({ targets: flash, scale: 2, alpha: 0, duration: 150, onComplete: () => flash.destroy() });
+
+    // Laser draws a line instead of a projectile
+    if (tower.type === 'laser') {
+      bullet.setScale(1.5);
+    }
+
+    // Missile has a smoke trail
+    if (tower.type === 'missile') {
+      bullet.setScale(1.0);
+    }
 
     const proj = {
       sprite: bullet,
       tower,
       target,
-      speed: 300,
+      speed,
       damage: tower.config.damage,
+      type: tower.type,
     };
 
     this.projectiles.push(proj);
@@ -740,8 +762,9 @@ export class GameScene extends Phaser.Scene {
       const dy = proj.target.sprite.y - proj.sprite.y;
       const dist = Math.sqrt(dx * dx + dy * dy);
 
-      if (dist < 10) {
-        // Hit!
+      if (dist < 12) {
+        // Hit effects based on type
+        this.createHitEffect(proj);
         this.hitEnemy(proj.target, proj);
         proj.sprite.destroy();
         this.projectiles.splice(i, 1);
@@ -749,10 +772,54 @@ export class GameScene extends Phaser.Scene {
         const speed = proj.speed * this.gameSpeed;
         proj.sprite.x += (dx / dist) * speed * dt;
         proj.sprite.y += (dy / dist) * speed * dt;
-
-        // Rotate bullet toward target
         proj.sprite.rotation = Math.atan2(dy, dx);
+
+        // Missile smoke trail
+        if (proj.type === 'missile') {
+          const smoke = this.add.circle(proj.sprite.x, proj.sprite.y, 3, 0x888888, 0.4).setDepth(24);
+          this.tweens.add({ targets: smoke, scale: 2, alpha: 0, duration: 300, onComplete: () => smoke.destroy() });
+        }
+        // Plasma glow trail
+        if (proj.type === 'plasma') {
+          const glow = this.add.circle(proj.sprite.x, proj.sprite.y, 2, 0x00aaff, 0.3).setDepth(24);
+          this.tweens.add({ targets: glow, scale: 1.5, alpha: 0, duration: 200, onComplete: () => glow.destroy() });
+        }
       }
+    }
+  }
+
+  createHitEffect(proj) {
+    const x = proj.target.sprite.x;
+    const y = proj.target.sprite.y;
+
+    if (proj.type === 'missile') {
+      // Big explosion
+      const exp = this.add.image(x, y, 'explosion').setDepth(30).setScale(0.3);
+      this.tweens.add({ targets: exp, scale: 2, alpha: 0, duration: 400, onComplete: () => exp.destroy() });
+      // Shockwave ring
+      const ring = this.add.circle(x, y, 5, 0xffaa00, 0).setStrokeStyle(2, 0xffaa00, 0.8).setDepth(30);
+      this.tweens.add({ targets: ring, scale: 4, alpha: 0, duration: 300, onComplete: () => ring.destroy() });
+    } else if (proj.type === 'slow') {
+      // Ice burst
+      for (let j = 0; j < 4; j++) {
+        const angle = (Math.PI * 2 / 4) * j;
+        const shard = this.add.circle(x, y, 3, 0x88ffff, 0.8).setDepth(30);
+        this.tweens.add({
+          targets: shard,
+          x: x + Math.cos(angle) * 20,
+          y: y + Math.sin(angle) * 20,
+          alpha: 0, duration: 300,
+          onComplete: () => shard.destroy(),
+        });
+      }
+    } else if (proj.type === 'laser') {
+      // Red flash
+      const flash = this.add.circle(x, y, 10, 0xff2222, 0.5).setDepth(30);
+      this.tweens.add({ targets: flash, scale: 2, alpha: 0, duration: 150, onComplete: () => flash.destroy() });
+    } else {
+      // Default spark
+      const spark = this.add.circle(x, y, 5, 0xffffff, 0.6).setDepth(30);
+      this.tweens.add({ targets: spark, scale: 2, alpha: 0, duration: 200, onComplete: () => spark.destroy() });
     }
   }
 
@@ -803,7 +870,7 @@ export class GameScene extends Phaser.Scene {
     this.coinsText.setText(`${this.coins}`);
     this.sheepText.setText(`${this.sheepCount}/10`);
     if (this.waveStarted) {
-      this.waveText.setText(`Wave ${this.waveManager.getWaveNumber()}/${this.waveManager.totalWaves}`);
+      this.waveText.setText(`웨이브 ${this.waveManager.getWaveNumber()}/${this.waveManager.totalWaves}`);
     }
 
     // Update tower button affordability
