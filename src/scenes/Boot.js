@@ -500,29 +500,33 @@ export class BootScene extends Phaser.Scene {
 
     // ========== PROJECTILES (distinct per tower) ==========
 
-    // Plasma bullet - glowing energy orb
+    // Plasma bullet - BLUE glowing energy ball (matches blue plasma tower)
     g.clear();
-    g.fillStyle(0x0088ff, 0.3);
-    g.fillCircle(8, 8, 8);
-    g.fillStyle(0x00bbff, 0.6);
-    g.fillCircle(8, 8, 5);
-    g.fillStyle(0x66ddff, 1);
-    g.fillCircle(8, 8, 3);
-    g.fillStyle(0xffffff, 0.8);
-    g.fillCircle(8, 8, 1.5);
-    g.generateTexture('bullet_plasma', 16, 16);
+    g.fillStyle(0x0044ff, 0.2);
+    g.fillCircle(10, 10, 10);
+    g.fillStyle(0x0088ff, 0.5);
+    g.fillCircle(10, 10, 7);
+    g.fillStyle(0x44bbff, 0.8);
+    g.fillCircle(10, 10, 5);
+    g.fillStyle(0x88ddff, 1);
+    g.fillCircle(10, 10, 3);
+    g.fillStyle(0xffffff, 0.9);
+    g.fillCircle(10, 10, 1.5);
+    g.generateTexture('bullet_plasma', 20, 20);
 
-    // Laser beam - long red beam
+    // Laser beam - RED long thin beam (matches red laser tower)
     g.clear();
-    g.fillStyle(0xff0000, 0.3);
-    g.fillRect(0, 0, 24, 6);
-    g.fillStyle(0xff4444, 0.7);
-    g.fillRect(2, 1, 20, 4);
+    g.fillStyle(0xff0000, 0.2);
+    g.fillRect(0, 1, 30, 8);
+    g.fillStyle(0xff2222, 0.5);
+    g.fillRect(2, 2, 26, 6);
+    g.fillStyle(0xff4444, 0.8);
+    g.fillRect(4, 3, 22, 4);
     g.fillStyle(0xff8888, 1);
-    g.fillRect(4, 2, 16, 2);
-    g.fillStyle(0xffffff, 0.8);
-    g.fillRect(6, 2.5, 12, 1);
-    g.generateTexture('bullet_laser', 24, 6);
+    g.fillRect(6, 4, 18, 2);
+    g.fillStyle(0xffcccc, 0.9);
+    g.fillRect(8, 4.5, 14, 1);
+    g.generateTexture('bullet_laser', 30, 10);
 
     // Freeze shard - ice crystal
     g.clear();

@@ -25,8 +25,8 @@ export const TOWER_TYPES = {
     bulletKey: 'bullet_plasma',
     cost: 50,
     damage: 15,
-    range: 3, // in grid cells
-    fireRate: 800, // ms between shots
+    range: 3,
+    fireRate: 800,
     color: 0x0088ff,
     description: 'Balanced. Hits ground & air.',
     canHitAir: true,

@@ -413,13 +413,29 @@ export class GameScene extends Phaser.Scene {
     const sprite = this.add.image(pos.x, pos.y, towerType.key).setDepth(10).setScale(1.2);
     this.entityLayer.add(sprite);
 
-    // Place animation
+    // Place animation - dramatic drop-in
     sprite.setScale(0);
+    sprite.setAlpha(0);
     this.tweens.add({
       targets: sprite,
       scale: 1.2,
-      duration: 200,
+      alpha: 1,
+      duration: 350,
       ease: 'Back.easeOut',
+    });
+    // Ground impact ring
+    const impactRing = this.add.circle(pos.x, pos.y, 5, 0x000000, 0)
+      .setStrokeStyle(2, towerType.color, 0.7).setDepth(9);
+    this.tweens.add({
+      targets: impactRing, scale: 3, alpha: 0, duration: 400,
+      onComplete: () => impactRing.destroy(),
+    });
+
+    // Idle glow animation (subtle pulse)
+    const glow = this.add.circle(pos.x, pos.y, 16, towerType.color, 0.08).setDepth(9);
+    this.tweens.add({
+      targets: glow, scale: 1.4, alpha: 0.02, duration: 1500,
+      yoyo: true, repeat: -1, ease: 'Sine.easeInOut',
     });
 
     const tower = {
@@ -665,15 +681,22 @@ export class GameScene extends Phaser.Scene {
     const spawnFlash = this.add.circle(pos.x, pos.y, 15, 0xff0044, 0.5).setDepth(19);
     this.tweens.add({ targets: spawnFlash, scale: 2, alpha: 0, duration: 300, onComplete: () => spawnFlash.destroy() });
 
-    // HP bar background (bigger)
+    // Shadow under enemy
+    const shadowSize = config.type === 'boss' ? 14 : config.type === 'tank' ? 10 : 7;
+    const shadow = this.add.ellipse(pos.x, pos.y + 12, shadowSize * 2, shadowSize, 0x000000, 0.25).setDepth(19);
+
+    // HP bar background (bigger, with border)
     const hpBarW = config.type === 'boss' ? 40 : 30;
-    const hpBarBg = this.add.rectangle(pos.x, pos.y - 22, hpBarW, 5, 0x333333).setDepth(21);
+    const hpBarBorder = this.add.rectangle(pos.x, pos.y - 22, hpBarW + 2, 7, 0x111111).setDepth(20);
+    const hpBarBg = this.add.rectangle(pos.x, pos.y - 22, hpBarW, 5, 0x444444).setDepth(21);
     const hpBar = this.add.rectangle(pos.x, pos.y - 22, hpBarW, 5, 0x00ff44).setDepth(22);
 
     const enemy = {
       sprite,
+      shadow,
       hpBar,
       hpBarBg,
+      hpBarBorder,
       hp: config.hp,
       maxHp: config.maxHp,
       speed: config.speed,
@@ -796,9 +819,11 @@ export class GameScene extends Phaser.Scene {
         }
       }
 
-      // Update HP bar position - smooth follow
+      // Update positions - smooth follow
       enemy.hpBar.setPosition(enemy.sprite.x, enemy.sprite.y - 24);
       enemy.hpBarBg.setPosition(enemy.sprite.x, enemy.sprite.y - 24);
+      enemy.hpBarBorder.setPosition(enemy.sprite.x, enemy.sprite.y - 24);
+      enemy.shadow.setPosition(enemy.sprite.x, enemy.sprite.y + 12);
 
       // Check if dead
       if (enemy.hp <= 0) {
@@ -903,6 +928,8 @@ export class GameScene extends Phaser.Scene {
     enemy.sprite.destroy();
     enemy.hpBar.destroy();
     enemy.hpBarBg.destroy();
+    enemy.hpBarBorder.destroy();
+    if (enemy.shadow) enemy.shadow.destroy();
     this.enemies.splice(index, 1);
   }
 
