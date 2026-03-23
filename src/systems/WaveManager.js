@@ -22,6 +22,9 @@ export class WaveManager {
     const wave = WAVES[this.currentWave];
     const enemies = this.flattenWave(wave);
 
+    // Wave announcement
+    this.scene.showWaveAnnouncement(this.currentWave + 1, this.totalWaves, this.currentWave === this.totalWaves - 1);
+
     let index = 0;
     this.waveTimer = this.scene.time.addEvent({
       delay: wave.delay,
