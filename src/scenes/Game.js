@@ -81,7 +81,7 @@ export class GameScene extends Phaser.Scene {
       const pos = this.pathManager.gridToWorld(p.col, p.row);
       const offsetX = Phaser.Math.Between(-8, 8);
       const offsetY = Phaser.Math.Between(-8, 8);
-      const sheep = this.add.image(pos.x + offsetX, pos.y + offsetY, 'sheep').setScale(0.8);
+      const sheep = this.add.image(pos.x + offsetX, pos.y + offsetY, 'sheep').setScale(1.3);
       this.entityLayer.add(sheep);
 
       // Idle animation
@@ -318,14 +318,14 @@ export class GameScene extends Phaser.Scene {
     this.updateUI();
 
     const pos = this.pathManager.gridToWorld(col, row);
-    const sprite = this.add.image(pos.x, pos.y, towerType.key).setDepth(10);
+    const sprite = this.add.image(pos.x, pos.y, towerType.key).setDepth(10).setScale(1.2);
     this.entityLayer.add(sprite);
 
     // Place animation
     sprite.setScale(0);
     this.tweens.add({
       targets: sprite,
-      scale: 1,
+      scale: 1.2,
       duration: 200,
       ease: 'Back.easeOut',
     });
@@ -497,12 +497,14 @@ export class GameScene extends Phaser.Scene {
     const spawn = Phaser.Utils.Array.GetRandom(this.pathManager.spawnPoints);
     const pos = this.pathManager.gridToWorld(spawn.col, spawn.row);
 
-    const sprite = this.add.image(pos.x, pos.y, config.key).setDepth(20);
+    const enemyScale = config.type === 'boss' ? 1.8 : config.type === 'tank' ? 1.5 : 1.3;
+    const sprite = this.add.image(pos.x, pos.y, config.key).setDepth(20).setScale(enemyScale);
     this.entityLayer.add(sprite);
 
-    // HP bar background
-    const hpBarBg = this.add.rectangle(pos.x, pos.y - 18, 24, 4, 0x333333).setDepth(21);
-    const hpBar = this.add.rectangle(pos.x, pos.y - 18, 24, 4, 0x00ff44).setDepth(22);
+    // HP bar background (bigger)
+    const hpBarW = config.type === 'boss' ? 40 : 30;
+    const hpBarBg = this.add.rectangle(pos.x, pos.y - 22, hpBarW, 5, 0x333333).setDepth(21);
+    const hpBar = this.add.rectangle(pos.x, pos.y - 22, hpBarW, 5, 0x00ff44).setDepth(22);
 
     const enemy = {
       sprite,
@@ -519,6 +521,7 @@ export class GameScene extends Phaser.Scene {
       pathIndex: 0,
       slowTimer: 0,
       reachedSheep: false,
+      hpBarWidth: hpBarW,
     };
 
     this.enemies.push(enemy);
@@ -617,8 +620,8 @@ export class GameScene extends Phaser.Scene {
       }
 
       // Update HP bar position
-      enemy.hpBar.setPosition(enemy.sprite.x, enemy.sprite.y - 18);
-      enemy.hpBarBg.setPosition(enemy.sprite.x, enemy.sprite.y - 18);
+      enemy.hpBar.setPosition(enemy.sprite.x, enemy.sprite.y - 24);
+      enemy.hpBarBg.setPosition(enemy.sprite.x, enemy.sprite.y - 24);
 
       // Check if dead
       if (enemy.hp <= 0) {
@@ -758,7 +761,7 @@ export class GameScene extends Phaser.Scene {
 
     // Update HP bar
     const hpRatio = Math.max(0, enemy.hp / enemy.maxHp);
-    enemy.hpBar.setSize(24 * hpRatio, 4);
+    enemy.hpBar.setSize((enemy.hpBarWidth || 30) * hpRatio, 5);
     enemy.hpBar.setFillStyle(hpRatio > 0.5 ? 0x00ff44 : hpRatio > 0.25 ? 0xffaa00 : 0xff0044);
 
     // Flash effect
@@ -784,7 +787,7 @@ export class GameScene extends Phaser.Scene {
         if (Math.sqrt(dx * dx + dy * dy) <= splashRange) {
           other.hp -= proj.damage * 0.5;
           const otherHpRatio = Math.max(0, other.hp / other.maxHp);
-          other.hpBar.setSize(24 * otherHpRatio, 4);
+          other.hpBar.setSize((other.hpBarWidth || 30) * otherHpRatio, 5);
         }
       }
     }
