@@ -70,11 +70,28 @@ export class GameScene extends Phaser.Scene {
       { col: 9, row: 12 }, // 10th sheep in center
     ];
 
-    // Draw sheep pen
+    // Draw sheep pen with fence-like border
+    const penCenter = this.pathManager.gridToWorld(9, 12);
+    // Green meadow area
     for (const area of this.pathManager.sheepArea) {
       const pos = this.pathManager.gridToWorld(area.col, area.row);
       this.add.image(pos.x, pos.y, 'sheep_pen');
     }
+    // Glowing border around pen
+    const penBorder = this.add.rectangle(penCenter.x, penCenter.y, 3 * 40 + 6, 3 * 40 + 6, 0x000000, 0)
+      .setStrokeStyle(2, 0x00ff88, 0.4).setDepth(1);
+    this.tweens.add({
+      targets: penBorder,
+      alpha: 0.8,
+      duration: 1500,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut',
+    });
+    // Label
+    this.add.text(penCenter.x, penCenter.y + 65, '🐑 양 우리', {
+      fontFamily: 'monospace', fontSize: '10px', fill: '#00cc66',
+    }).setOrigin(0.5).setDepth(3).setAlpha(0.7);
 
     for (let i = 0; i < 10; i++) {
       const p = sheepPositions[i];
@@ -101,17 +118,78 @@ export class GameScene extends Phaser.Scene {
   createSpawnPoints() {
     for (const spawn of this.pathManager.spawnPoints) {
       const pos = this.pathManager.gridToWorld(spawn.col, spawn.row);
-      const sp = this.add.image(pos.x, pos.y, 'spawn_point');
-      this.gridLayer.add(sp);
 
-      // Pulsing effect
+      // Outer portal ring (rotating)
+      const outerRing = this.add.circle(pos.x, pos.y, 18, 0x000000, 0)
+        .setStrokeStyle(3, 0xff0044, 0.6).setDepth(2);
       this.tweens.add({
-        targets: sp,
-        alpha: 0.4,
-        duration: 1000,
+        targets: outerRing,
+        scale: 1.3,
+        alpha: 0.3,
+        duration: 1200,
+        yoyo: true,
+        repeat: -1,
+        ease: 'Sine.easeInOut',
+      });
+
+      // Inner portal glow
+      const innerGlow = this.add.circle(pos.x, pos.y, 10, 0xff0044, 0.15).setDepth(2);
+      this.tweens.add({
+        targets: innerGlow,
+        scale: 1.5,
+        alpha: 0.05,
+        duration: 800,
         yoyo: true,
         repeat: -1,
       });
+
+      // Portal core - bright dot
+      const core = this.add.circle(pos.x, pos.y, 4, 0xff4466, 0.8).setDepth(3);
+      this.tweens.add({
+        targets: core,
+        scale: 1.5,
+        alpha: 0.4,
+        duration: 500,
+        yoyo: true,
+        repeat: -1,
+      });
+
+      // Second rotating ring (opposite phase)
+      const ring2 = this.add.circle(pos.x, pos.y, 14, 0x000000, 0)
+        .setStrokeStyle(1.5, 0xff6688, 0.4).setDepth(2);
+      this.tweens.add({
+        targets: ring2,
+        scale: 0.7,
+        alpha: 0.6,
+        duration: 900,
+        yoyo: true,
+        repeat: -1,
+      });
+
+      // "WARP" label
+      this.add.text(pos.x, pos.y + 22, '워프', {
+        fontFamily: 'monospace', fontSize: '8px', fill: '#ff4466',
+      }).setOrigin(0.5).setDepth(3).setAlpha(0.6);
+
+      // Floating particles around portal
+      for (let i = 0; i < 3; i++) {
+        const angle = (Math.PI * 2 / 3) * i;
+        const particle = this.add.circle(
+          pos.x + Math.cos(angle) * 15,
+          pos.y + Math.sin(angle) * 15,
+          1.5, 0xff4466, 0.6
+        ).setDepth(3);
+        this.tweens.add({
+          targets: particle,
+          x: pos.x + Math.cos(angle + Math.PI) * 15,
+          y: pos.y + Math.sin(angle + Math.PI) * 15,
+          duration: 2000,
+          yoyo: true,
+          repeat: -1,
+          ease: 'Sine.easeInOut',
+          delay: i * 300,
+        });
+      }
     }
   }
 
@@ -128,9 +206,9 @@ export class GameScene extends Phaser.Scene {
     }).setDepth(100);
 
     // Sheep count
-    this.add.image(30, 55, 'sheep').setDepth(100).setScale(0.7);
-    this.sheepText = this.add.text(50, 46, `${this.sheepCount}/10`, {
-      fontFamily: 'monospace', fontSize: '18px', fill: '#ffffff',
+    this.add.image(30, 55, 'sheep').setDepth(100).setScale(0.5);
+    this.sheepText = this.add.text(50, 46, `🐑 ${this.sheepCount}/10`, {
+      fontFamily: 'monospace', fontSize: '16px', fill: '#ffffff',
     }).setDepth(100);
 
     // Wave info
@@ -145,12 +223,23 @@ export class GameScene extends Phaser.Scene {
     }).setInteractive().setDepth(100);
     this.speedBtn.on('pointerdown', () => this.toggleSpeed());
 
-    // Start/Next wave button
-    this.startBtn = this.add.text(w - 70, 48, 'START', {
-      fontFamily: 'monospace', fontSize: '14px', fill: '#00ff88',
-      backgroundColor: '#1a1a3e', padding: { x: 8, y: 4 },
-    }).setInteractive().setDepth(100);
-    this.startBtn.on('pointerdown', () => this.onStartWave());
+    // Start/Next wave button - big and visible
+    this.startBtnBg = this.add.rectangle(w / 2, 55, 160, 36, 0x005522, 0.95)
+      .setStrokeStyle(2, 0x00ff88, 1).setInteractive().setDepth(100);
+    this.startBtn = this.add.text(w / 2, 55, '▶ 시작', {
+      fontFamily: 'monospace', fontSize: '18px', fill: '#00ff88', fontStyle: 'bold',
+    }).setOrigin(0.5).setDepth(101);
+    this.startBtnBg.on('pointerdown', () => this.onStartWave());
+
+    // Pulse animation for start button
+    this.tweens.add({
+      targets: [this.startBtnBg],
+      scaleX: 1.05, scaleY: 1.1,
+      duration: 600,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut',
+    });
 
     // Bottom tower selection panel
     const panelY = 1170;
@@ -530,7 +619,8 @@ export class GameScene extends Phaser.Scene {
     this.waveManager.autoStart = true;
     const hasMore = this.waveManager.startNextWave();
     if (hasMore) {
-      this.startBtn.setText('다음');
+      this.startBtn.setText('▶ 다음 웨이브');
+      this.startBtnBg.fillColor = 0x003355;
       this.updateUI();
     }
   }
@@ -691,9 +781,22 @@ export class GameScene extends Phaser.Scene {
         const speed = enemy.speed * this.gameSpeed;
         enemy.sprite.x += (dx / dist) * speed * dt;
         enemy.sprite.y += (dy / dist) * speed * dt;
+
+        // Face movement direction (flip sprite)
+        if (dx !== 0) {
+          enemy.sprite.setFlipX(dx < 0);
+        }
+
+        // Flying enemies hover with sine wave
+        if (enemy.flying) {
+          if (!enemy.hoverOffset) enemy.hoverOffset = Math.random() * Math.PI * 2;
+          enemy.hoverOffset += dt * 3;
+          const hoverY = Math.sin(enemy.hoverOffset) * 4;
+          enemy.sprite.y += hoverY * dt * 5;
+        }
       }
 
-      // Update HP bar position
+      // Update HP bar position - smooth follow
       enemy.hpBar.setPosition(enemy.sprite.x, enemy.sprite.y - 24);
       enemy.hpBarBg.setPosition(enemy.sprite.x, enemy.sprite.y - 24);
 
@@ -1007,7 +1110,8 @@ export class GameScene extends Phaser.Scene {
 
   updateUI() {
     this.coinsText.setText(`${this.coins}`);
-    this.sheepText.setText(`${this.sheepCount}/10`);
+    this.sheepText.setText(`🐑 ${this.sheepCount}/10`);
+    if (this.sheepCount <= 3) this.sheepText.setColor('#ff4444');
     if (this.waveStarted) {
       this.waveText.setText(`웨이브 ${this.waveManager.getWaveNumber()}/${this.waveManager.totalWaves}`);
     }
