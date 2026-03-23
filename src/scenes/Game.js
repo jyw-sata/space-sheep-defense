@@ -251,8 +251,8 @@ export class GameScene extends Phaser.Scene {
     }).setOrigin(0.5).setDepth(101);
 
     const towerKeys = Object.keys(TOWER_TYPES);
-    const towerNames = { plasma: '플라즈마', laser: '레이저', slow: '냉동', missile: '미사일', flak: '대공포' };
-    const towerEmojis = { plasma: '🔫', laser: '🔴', slow: '❄️', missile: '🚀', flak: '💜' };
+    const towerNames = { plasma: '플라즈마', laser: '레이저', slow: '냉동탑', missile: '미사일', flak: '대공포' };
+    const towerEmojis = { plasma: '🔵', laser: '🎯', slow: '❄️', missile: '🚀', flak: '🟣' };
     const towerDesc = {
       plasma: '만능형\n지상+공중',
       laser: '고데미지\n지상+공중',

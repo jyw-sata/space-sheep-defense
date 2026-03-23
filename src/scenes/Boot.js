@@ -140,163 +140,182 @@ export class BootScene extends Phaser.Scene {
     // ========== TOWERS (48x48 for detail, displayed at cell size) ==========
     const T = 48;
 
-    // PLASMA TOWER - rotating energy turret
+    // PLASMA TOWER - energy sphere cannon (blue glowing orb on base)
     g.clear();
-    // Base platform
-    g.fillStyle(0x1a3355, 1);
-    g.fillRoundedRect(4, 28, 40, 16, 4);
-    g.fillStyle(0x224466, 1);
-    g.fillRoundedRect(6, 30, 36, 12, 3);
-    // Turret body
-    g.fillStyle(0x0066cc, 1);
-    g.fillCircle(24, 24, 12);
-    g.fillStyle(0x0088ff, 1);
-    g.fillCircle(24, 22, 10);
-    // Gun barrel
-    g.fillStyle(0x3399ff, 1);
-    g.fillRoundedRect(21, 4, 6, 20, 2);
-    // Muzzle glow
+    // Dark base platform
+    g.fillStyle(0x112244, 1);
+    g.fillRoundedRect(6, 30, 36, 14, 5);
+    g.fillStyle(0x1a3366, 1);
+    g.fillRoundedRect(8, 32, 32, 10, 4);
+    // Short stubby barrel
+    g.fillStyle(0x2255aa, 1);
+    g.fillRoundedRect(19, 18, 10, 16, 3);
+    // Energy sphere (the main visual)
+    g.fillStyle(0x0066ff, 0.4);
+    g.fillCircle(24, 14, 14); // outer glow
+    g.fillStyle(0x0088ff, 0.6);
+    g.fillCircle(24, 14, 11);
+    g.fillStyle(0x33aaff, 0.8);
+    g.fillCircle(24, 14, 8);
     g.fillStyle(0x66ccff, 1);
-    g.fillCircle(24, 4, 5);
-    g.fillStyle(0xaaeeff, 0.7);
-    g.fillCircle(24, 4, 3);
-    g.fillStyle(0xffffff, 0.5);
-    g.fillCircle(24, 4, 1.5);
-    // Energy ring on turret
-    g.lineStyle(1.5, 0x66ddff, 0.6);
-    g.strokeCircle(24, 22, 7);
+    g.fillCircle(24, 14, 5);
+    g.fillStyle(0xbbeeFF, 1);
+    g.fillCircle(24, 12, 3);
+    g.fillStyle(0xffffff, 0.8);
+    g.fillCircle(23, 11, 1.5);
+    // Electric arcs around sphere
+    g.lineStyle(1, 0x44bbff, 0.6);
+    g.strokeCircle(24, 14, 12);
+    g.lineStyle(1, 0x88ddff, 0.3);
+    g.strokeCircle(24, 14, 16);
     g.generateTexture('tower_plasma', T, T);
 
-    // LASER TOWER - long-range sniper
+    // LASER TOWER - long precision sniper (red, clearly a long barrel)
     g.clear();
-    // Base platform
-    g.fillStyle(0x442222, 1);
-    g.fillRoundedRect(4, 30, 40, 14, 4);
-    g.fillStyle(0x553333, 1);
-    g.fillRoundedRect(6, 32, 36, 10, 3);
-    // Body block
-    g.fillStyle(0xcc2222, 1);
-    g.fillRoundedRect(12, 18, 24, 16, 3);
-    g.fillStyle(0xdd3333, 1);
-    g.fillRoundedRect(14, 20, 20, 12, 2);
-    // Long barrel
-    g.fillStyle(0xaa1111, 1);
-    g.fillRect(20, 2, 8, 22);
-    g.fillStyle(0xcc3333, 1);
-    g.fillRect(22, 2, 4, 22);
-    // Scope
-    g.fillStyle(0xff6666, 1);
-    g.fillCircle(30, 14, 4);
-    g.fillStyle(0xff9999, 1);
-    g.fillCircle(30, 14, 2);
-    // Muzzle flash
+    // Armored base
+    g.fillStyle(0x3a1a1a, 1);
+    g.fillRoundedRect(6, 30, 36, 14, 5);
+    g.fillStyle(0x4a2525, 1);
+    g.fillRoundedRect(8, 32, 32, 10, 4);
+    // Solid turret body (box shape)
+    g.fillStyle(0x882222, 1);
+    g.fillRoundedRect(14, 22, 20, 12, 2);
+    g.fillStyle(0xaa3333, 1);
+    g.fillRoundedRect(16, 24, 16, 8, 1);
+    // LONG thin barrel (clearly a sniper/laser)
+    g.fillStyle(0x771111, 1);
+    g.fillRect(22, 0, 4, 26);
+    g.fillStyle(0x993333, 1);
+    g.fillRect(23, 0, 2, 26);
+    // Barrel tip - thin red line glow
+    g.fillStyle(0xff2222, 1);
+    g.fillRect(22, 0, 4, 2);
+    g.fillStyle(0xff0000, 0.8);
+    g.fillCircle(24, 0, 2);
+    // Scope on side
+    g.fillStyle(0x661111, 1);
+    g.fillCircle(32, 20, 4);
+    g.fillStyle(0xff4444, 0.5);
+    g.fillCircle(32, 20, 2.5);
     g.fillStyle(0xff0000, 1);
-    g.fillCircle(24, 2, 4);
-    g.fillStyle(0xff4444, 0.7);
-    g.fillCircle(24, 2, 6);
-    g.fillStyle(0xff8888, 0.3);
-    g.fillCircle(24, 2, 8);
+    g.fillCircle(32, 20, 1);
+    // Red dot sight glow
+    g.fillStyle(0xff0000, 0.3);
+    g.fillCircle(24, 0, 5);
     g.generateTexture('tower_laser', T, T);
 
-    // SLOW TOWER - cryo emitter
+    // SLOW TOWER - cryo crystal emitter
     g.clear();
-    // Base platform
+    // Base
+    g.fillStyle(0x0a2233, 1);
+    g.fillRoundedRect(6, 32, 36, 12, 5);
     g.fillStyle(0x113344, 1);
-    g.fillRoundedRect(4, 30, 40, 14, 4);
-    // Crystal/antenna structure
-    g.fillStyle(0x006688, 1);
-    g.fillRect(20, 12, 8, 22);
-    // Dish
-    g.fillStyle(0x00aacc, 1);
-    g.fillCircle(24, 20, 14);
-    g.fillStyle(0x113344, 1);
-    g.fillCircle(24, 20, 10);
-    g.fillStyle(0x00ddff, 1);
-    g.fillCircle(24, 20, 7);
-    g.fillStyle(0x88ffff, 0.8);
-    g.fillCircle(24, 20, 4);
-    g.fillStyle(0xffffff, 0.6);
-    g.fillCircle(24, 20, 2);
-    // Ice crystal spikes
-    g.fillStyle(0x88eeff, 0.7);
-    g.beginPath(); g.moveTo(24, 2); g.lineTo(27, 10); g.lineTo(21, 10); g.closePath(); g.fillPath();
-    g.beginPath(); g.moveTo(10, 14); g.lineTo(16, 18); g.lineTo(14, 22); g.closePath(); g.fillPath();
-    g.beginPath(); g.moveTo(38, 14); g.lineTo(32, 18); g.lineTo(34, 22); g.closePath(); g.fillPath();
-    // Frost rings
-    g.lineStyle(1, 0x88ffff, 0.4);
-    g.strokeCircle(24, 20, 17);
-    g.strokeCircle(24, 20, 20);
+    g.fillRoundedRect(8, 34, 32, 8, 4);
+    // Central pillar
+    g.fillStyle(0x005577, 1);
+    g.fillRoundedRect(20, 16, 8, 20, 2);
+    // Large ice crystal (diamond shape)
+    g.fillStyle(0x00ccee, 0.7);
+    g.beginPath(); g.moveTo(24, 0); g.lineTo(36, 18); g.lineTo(24, 36); g.lineTo(12, 18); g.closePath(); g.fillPath();
+    g.fillStyle(0x44ddff, 0.8);
+    g.beginPath(); g.moveTo(24, 4); g.lineTo(33, 18); g.lineTo(24, 32); g.lineTo(15, 18); g.closePath(); g.fillPath();
+    g.fillStyle(0x88eeff, 0.9);
+    g.beginPath(); g.moveTo(24, 8); g.lineTo(30, 18); g.lineTo(24, 28); g.lineTo(18, 18); g.closePath(); g.fillPath();
+    // Bright center
+    g.fillStyle(0xccffff, 1);
+    g.fillCircle(24, 18, 4);
+    g.fillStyle(0xffffff, 0.8);
+    g.fillCircle(23, 16, 2);
+    // Frost aura
+    g.lineStyle(1.5, 0x66eeff, 0.3);
+    g.strokeCircle(24, 18, 18);
+    g.lineStyle(1, 0x88ffff, 0.2);
+    g.strokeCircle(24, 18, 22);
+    // Small ice shards
+    g.fillStyle(0xaaeeff, 0.5);
+    g.beginPath(); g.moveTo(6, 10); g.lineTo(10, 6); g.lineTo(12, 12); g.closePath(); g.fillPath();
+    g.beginPath(); g.moveTo(42, 10); g.lineTo(38, 6); g.lineTo(36, 12); g.closePath(); g.fillPath();
     g.generateTexture('tower_slow', T, T);
 
-    // MISSILE TOWER - multi-rocket launcher
+    // MISSILE TOWER - heavy rocket launcher
     g.clear();
-    // Base platform
-    g.fillStyle(0x443311, 1);
-    g.fillRoundedRect(4, 30, 40, 14, 4);
-    g.fillStyle(0x554422, 1);
-    g.fillRoundedRect(6, 32, 36, 10, 3);
-    // Launcher box body
-    g.fillStyle(0x886633, 1);
-    g.fillRoundedRect(8, 12, 32, 22, 3);
-    g.fillStyle(0x997744, 1);
-    g.fillRoundedRect(10, 14, 28, 18, 2);
-    // 4 missile tubes
-    g.fillStyle(0x555555, 1);
-    g.fillCircle(16, 18, 5);
-    g.fillCircle(32, 18, 5);
-    g.fillCircle(16, 28, 5);
-    g.fillCircle(32, 28, 5);
-    // Missiles in tubes
+    // Base
+    g.fillStyle(0x332211, 1);
+    g.fillRoundedRect(6, 32, 36, 12, 5);
+    g.fillStyle(0x443322, 1);
+    g.fillRoundedRect(8, 34, 32, 8, 4);
+    // Launcher housing (olive/military)
+    g.fillStyle(0x556633, 1);
+    g.fillRoundedRect(8, 10, 32, 26, 4);
+    g.fillStyle(0x667744, 1);
+    g.fillRoundedRect(10, 12, 28, 22, 3);
+    // 4 missile tubes (2x2 grid, dark holes)
+    g.fillStyle(0x333333, 1);
+    g.fillCircle(17, 18, 6);
+    g.fillCircle(31, 18, 6);
+    g.fillCircle(17, 29, 6);
+    g.fillCircle(31, 29, 6);
+    g.fillStyle(0x222222, 1);
+    g.fillCircle(17, 18, 4.5);
+    g.fillCircle(31, 18, 4.5);
+    g.fillCircle(17, 29, 4.5);
+    g.fillCircle(31, 29, 4.5);
+    // Visible missiles (orange tips)
     g.fillStyle(0xff6600, 1);
-    g.fillCircle(16, 18, 3);
-    g.fillCircle(32, 18, 3);
-    g.fillCircle(16, 28, 3);
-    g.fillCircle(32, 28, 3);
-    // Missile tips
+    g.fillCircle(17, 18, 2.5);
+    g.fillCircle(31, 18, 2.5);
     g.fillStyle(0xffaa00, 1);
-    g.fillCircle(16, 18, 1.5);
-    g.fillCircle(32, 18, 1.5);
-    g.fillCircle(16, 28, 1.5);
-    g.fillCircle(32, 28, 1.5);
-    // Warning stripes
+    g.fillCircle(17, 18, 1.2);
+    g.fillCircle(31, 18, 1.2);
+    // Warning triangle
     g.fillStyle(0xffcc00, 0.6);
-    g.fillRect(10, 10, 28, 3);
+    g.beginPath(); g.moveTo(24, 4); g.lineTo(28, 10); g.lineTo(20, 10); g.closePath(); g.fillPath();
+    g.fillStyle(0x333300, 1);
+    g.fillRect(23, 5.5, 2, 3);
+    g.fillCircle(24, 9, 0.8);
     g.generateTexture('tower_missile', T, T);
 
-    // FLAK TOWER - twin anti-air autocannon
+    // FLAK TOWER - dual autocannon (anti-air)
     g.clear();
-    // Base platform
-    g.fillStyle(0x221144, 1);
-    g.fillRoundedRect(4, 30, 40, 14, 4);
-    g.fillStyle(0x332255, 1);
-    g.fillRoundedRect(6, 32, 36, 10, 3);
-    // Rotating turret base
-    g.fillStyle(0x5533aa, 1);
-    g.fillCircle(24, 28, 11);
-    g.fillStyle(0x6644bb, 1);
-    g.fillCircle(24, 26, 9);
-    // Twin barrels
-    g.fillStyle(0x7744cc, 1);
-    g.fillRoundedRect(14, 4, 5, 24, 2);
-    g.fillRoundedRect(29, 4, 5, 24, 2);
-    g.fillStyle(0x8855dd, 1);
-    g.fillRoundedRect(15, 4, 3, 24, 1);
-    g.fillRoundedRect(30, 4, 3, 24, 1);
-    // Muzzle flashes
-    g.fillStyle(0xbb88ff, 1);
-    g.fillCircle(16, 4, 4);
-    g.fillCircle(31, 4, 4);
-    g.fillStyle(0xddbbff, 0.8);
-    g.fillCircle(16, 4, 2.5);
-    g.fillCircle(31, 4, 2.5);
-    g.fillStyle(0xffffff, 0.5);
-    g.fillCircle(16, 4, 1.5);
-    g.fillCircle(31, 4, 1.5);
-    // Crosshair on turret
+    // Base
+    g.fillStyle(0x1a1133, 1);
+    g.fillRoundedRect(6, 32, 36, 12, 5);
+    g.fillStyle(0x221a44, 1);
+    g.fillRoundedRect(8, 34, 32, 8, 4);
+    // Turret rotating mount
+    g.fillStyle(0x4422aa, 1);
+    g.fillCircle(24, 28, 12);
+    g.fillStyle(0x5533bb, 1);
+    g.fillCircle(24, 26, 10);
+    // Twin long barrels
+    g.fillStyle(0x6633cc, 1);
+    g.fillRoundedRect(13, 2, 6, 26, 2);
+    g.fillRoundedRect(29, 2, 6, 26, 2);
+    g.fillStyle(0x7744dd, 1);
+    g.fillRoundedRect(14, 2, 4, 26, 1.5);
+    g.fillRoundedRect(30, 2, 4, 26, 1.5);
+    // Barrel highlights
+    g.fillStyle(0x9966ee, 0.5);
+    g.fillRect(14, 4, 1, 20);
+    g.fillRect(30, 4, 1, 20);
+    // Muzzle flashes (bright purple)
+    g.fillStyle(0xaa66ff, 0.4);
+    g.fillCircle(16, 2, 6);
+    g.fillCircle(32, 2, 6);
+    g.fillStyle(0xcc88ff, 0.7);
+    g.fillCircle(16, 2, 4);
+    g.fillCircle(32, 2, 4);
+    g.fillStyle(0xeeccff, 1);
+    g.fillCircle(16, 2, 2);
+    g.fillCircle(32, 2, 2);
+    // Radar dish on turret center
+    g.fillStyle(0x8855ee, 0.6);
+    g.fillCircle(24, 24, 4);
     g.lineStyle(1, 0xbb88ff, 0.5);
-    g.strokeCircle(24, 26, 5);
-    g.lineBetween(24, 21, 24, 31);
-    g.lineBetween(19, 26, 29, 26);
+    g.strokeCircle(24, 24, 6);
+    // Upward arrow indicator (anti-air)
+    g.fillStyle(0xbb88ff, 0.4);
+    g.beginPath(); g.moveTo(24, 14); g.lineTo(28, 20); g.lineTo(20, 20); g.closePath(); g.fillPath();
     g.generateTexture('tower_flak', T, T);
 
     // ========== ENEMIES (40x40) ==========
